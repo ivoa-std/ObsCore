@@ -35,33 +35,34 @@
 \usepackage{ltablex}
 \usepackage{seqsplit}
 \usepackage{soul}
-\usepackage{xcolor}
-\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[dvipsnames]{xcolor}
 
-\lstdefinelanguage{XML}
-    {
-    frame=single,
-    xleftmargin=20pt,
-    framexleftmargin=15pt,
-    numbers=left,
-    numberstyle=\tiny,
-    numbersep=5pt,
-    breaklines=true,
-    showstringspaces=false,
-      basicstyle=\ttfamily\footnotesize,
-      morestring=[b]",
-      moredelim=[s][\bfseries\color{red}]{<}{\ },
-      moredelim=[s][\bfseries\color{red}]{</}{>},
-      moredelim=[l][\bfseries\color{red}]{/>},
-      moredelim=[l][\bfseries\color{red}]{>},
-      moredelim=[s][\bfseries\color{black}]{>}{<},
-      morecomment=[s]{<?}{?>},
-      morecomment=[s]{<!--}{-->},
-      commentstyle=\color{gray},
-      stringstyle=\color{black},
-      keywordstyle=\color{blue},
-      identifierstyle=\color{red}
-    }
+%  -mireille- listing params from MIVOT spec
+\lstset{
+  flexiblecolumns=true,
+  columns=fullflexible,
+  % tagstyle=\ttfamily,
+  showstringspaces=False,
+  basicstyle=\tiny,
+  captionpos=b,
+  frame=single,
+  commentstyle=\color{gray}\upshape,
+  xleftmargin=20pt,
+  framexleftmargin=15pt,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=5pt,
+}
+
+\lstdefinelanguage{XML}{
+  morestring=[s][\color{Mulberry}]{"}{"},
+  morestring=[s][\color{darkgray}]{>}{<},
+  morecomment=[s][\color{lightgray}]{!--}{-->} ,
+  stringstyle=\color{black},
+  identifierstyle=\color{RoyalBlue},
+  keywordstyle=\color{ForestGreen},
+  morekeywords={xmlns,version,encoding,schemaLocation,,xsi,status,name,url,ref,tableref,dmid,dmref,dmrole,dmtype,value,datatype,ucd,utype,xtype,arraysize,unit,type,id,ID}, % list your attributes here
+}
 
 \begin{document}
 
@@ -1705,7 +1706,7 @@ brevity.
 {proposal\_id } &
   \seqsplit{Provenance.Proposal.identifier} &
   unitless & string & Identifier of proposal to which observation belongs & NO\\\hline
-\caption{Table X:  Data model summary (with addition of axes dimension and UCD for each axis)}
+\caption{Data model summary (with addition of axes dimension and UCD for each axis)}
 \label{tab:6}
 \end{tabularx}
 %\end{landscape}
@@ -2365,12 +2366,12 @@ service.
 three fields are integers, with this convention: (0=false, 1=true).
 \end{itemize}
 
-Tables \ref{table:tapschema-mandatory1} and \ref{table:tapschema-mandatory2} show TAP\_SCHEMA.columns values for the mandatory fields of an ObsTAP table. All Utypes have the data model
-namespace prefix {}``obscore:'' omitted in the table. The Datatype, Size, Principal, Index, and Std values shown here
+Tables \ref{table:tapschema-mandatory1} and \ref{table:tapschema-mandatory2} show TAP\_SCHEMA.columns values for the mandatory fields of an ObsTAP table, and Tables \ref{table:tapschema-optional} shows optional fields. All Utypes have the data model
+namespace prefix ``obscore:'' omitted in the table. The Datatype, Size, Principal, Index, and Std values shown here
 are informative for TAP 1.0 only; later versions of TAP may specify different values.
 
 %TITOTOTO
-\begin{sidewaystable}
+\begin{sidewaystable}[hbt]
 %\begin{longtable}[hbt]
 \small
 \begin{tabular}{|l|l|l|l|l|l|}% 6 left justified
@@ -2490,7 +2491,7 @@ Char.SpatialAxis.numBins2 &
 meta.number
 \\\hline
 \end{tabular}
-\caption{TAP.schema.columns values for the mandatory fields for an ObsTAP table. Part 1. All Utypes have the data model namespace prefix {\emph obscore:} omitted in the table..}
+\caption{TAP\_SCHEMA.columns values for the mandatory fields for an ObsTAP table. Part 1. All Utypes have the data model namespace prefix {\emph obscore:} omitted in the table..}
 \label{table:tapschema-mandatory1}
 \end{sidewaystable}
 
@@ -2598,7 +2599,7 @@ Provenance.ObsConfig.Instrument.name &
 meta.id;instr
 \\\hline
 \end{tabular}
-\caption{TAP.schema.columns values for the mandatory fields for an ObsTAP table.  Part 2.}
+\caption{TAP\_SCHEMA.columns values for the mandatory fields for an ObsTAP table.  Part 2.}
 \label{table:tapschema-mandatory2}
 \end{sidewaystable}
 
@@ -2820,7 +2821,7 @@ Provenance.Proposal.identifier &
 meta.id; obs.proposal
 \\\hline
 \end{tabular}
-\caption{TAP.schema.columns values for the optional fields for an ObsTAP table.  All Utypes have the data model namespace prefix {\emph obscore:'} omitted in the table..}
+\caption{TAP\_SCHEMA.columns values for the optional fields for an ObsTAP table.  All Utypes have the data model namespace prefix {\emph obscore:'} omitted in the table..}
 \label{table:tapschema-optional}
 \end{sidewaystable}
 
@@ -2832,18 +2833,13 @@ Here is a Query Response VOTable document obtained by the CADC ObsTAP/TAP1.1 ser
 It contains all mandatory fields for ObsCore1.1. and the implementation details for the Datalink service attached to the
 TAP response.
 
-% ML : use listing environment instead
-
-%\begin{lstlisting} [language=XML, caption= Query Response]{VOtableResponseExemple.xml}
-% Customize tag and attribute highlighting
-
 \lstinputlisting[
     language=XML,
     caption={Query Response},
     label={lst:xml_example},
-    basicstyle=\ttfamily\small,
+    %basicstyle=\ttfamily\small,
+    basicstyle=\footnotesize\ttfamily,
     breaklines=true
 ]{VOtableResponseExemple.xml}
-
 
 \end{document}
