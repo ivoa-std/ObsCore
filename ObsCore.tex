@@ -35,28 +35,35 @@
 \usepackage{ltablex}
 \usepackage{seqsplit}
 \usepackage{soul}
-\usepackage{xcolor}
-\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[dvipsnames]{xcolor}
 
 %  -mireille- listing params from MIVOT spec
-\lstset{flexiblecolumns=true,
-            columns=fullflexible,
-           % tagstyle=\ttfamily,
-            showstringspaces=False,
-            basicstyle=\tiny, 
-            captionpos=b,
-            frame=single,
-            commentstyle=\color{gray}\upshape}
-\lstdefinelanguage{XML}
-{
-  morestring=[s][\color{mauve}]{"}{"},
-  morestring=[s][\color{black}]{>}{<},
-  morecomment=[s][\color{gray}]{!--}{-->} ,
+\lstset{
+  flexiblecolumns=true,
+  columns=fullflexible,
+  % tagstyle=\ttfamily,
+  showstringspaces=False,
+  basicstyle=\tiny,
+  captionpos=b,
+  frame=single,
+  commentstyle=\color{gray}\upshape,
+  xleftmargin=20pt,
+  framexleftmargin=15pt,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=5pt,
+}
+
+\lstdefinelanguage{XML}{
+  morestring=[s][\color{Mulberry}]{"}{"},
+  morestring=[s][\color{darkgray}]{>}{<},
+  morecomment=[s][\color{lightgray}]{!--}{-->} ,
   stringstyle=\color{black},
-  identifierstyle=\color{lightblue},
-  keywordstyle=\color{darkgreen},
-  morekeywords={xmlns,xsi,status,name,url, ref,tableref,dmid,dmref,dmrole,dmtype,value }% list your attributes here
-   }
+  identifierstyle=\color{RoyalBlue},
+  keywordstyle=\color{PineGreen},
+  morekeywords={xmlns,version,encoding,schemaLocation,,xsi,status,name,url,ref,tableref,dmid,dmref,dmrole,dmtype,value,datatype,ucd,utype,xtype,arraysize,unit}, % list your attributes here
+}
+
 %
 %\lstdefinelanguage{XML}
 %   {
@@ -2390,7 +2397,7 @@ namespace prefix {}``obscore:'' omitted in the table. The Datatype, Size, Princi
 are informative for TAP 1.0 only; later versions of TAP may specify different values.
 
 %TITOTOTO
-\begin{sidewaystable}
+\begin{sidewaystable}[hbt]
 %\begin{longtable}[hbt]
 \small
 \begin{tabular}{|l|l|l|l|l|l|}% 6 left justified
@@ -2852,11 +2859,6 @@ Here is a Query Response VOTable document obtained by the CADC ObsTAP/TAP1.1 ser
 It contains all mandatory fields for ObsCore1.1. and the implementation details for the Datalink service attached to the
 TAP response.
 
-% ML : use listing environment instead
-
-%\begin{lstlisting} [language=XML, caption= Query Response]{VOtableResponseExemple.xml}
-% Customize tag and attribute highlighting
-
 \lstinputlisting[
     language=XML,
     caption={Query Response},
@@ -2865,6 +2867,5 @@ TAP response.
     basicstyle=\footnotesize\ttfamily,
     breaklines=true
 ]{VOtableResponseExemple.xml}
-
 
 \end{document}
