@@ -39,22 +39,22 @@
 
 %  -mireille- listing params from MIVOT spec
 \lstset{
+  frame=single,
+}
+
+\lstdefinelanguage{XML}{
   flexiblecolumns=true,
   columns=fullflexible,
   % tagstyle=\ttfamily,
   showstringspaces=False,
   basicstyle=\tiny,
   captionpos=b,
-  frame=single,
   commentstyle=\color{gray}\upshape,
   xleftmargin=20pt,
   framexleftmargin=15pt,
   numbers=left,
   numberstyle=\tiny,
   numbersep=5pt,
-}
-
-\lstdefinelanguage{XML}{
   morestring=[s][\color{Mulberry}]{"}{"},
   morestring=[s][\color{darkgray}]{>}{<},
   morecomment=[s][\color{lightgray}]{!--}{-->} ,
@@ -1111,7 +1111,7 @@ Show me a list of all data that satisfies:
 \end{enumerate}
 These data would be searched on all VO services by sending the following query:
 
-\begin{lstlisting}[language=SQL , flexiblecolumns=true]
+\begin{lstlisting}[language=SQL, flexiblecolumns=true]
 SELECT * FROM ivoa.Obscore
 WHERE CONTAINS(POINT('ICRS',16.0,40.0),s_region)=1
 \end{lstlisting}
