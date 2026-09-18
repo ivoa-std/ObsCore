@@ -285,6 +285,7 @@ The detailed list of use cases proposed for data discovery is given in Appendix 
 %Fig.~\ref{fig:archdiag} shows the role this document plays within the
 %IVOA architecture \citep{2021ivoa.spec.1101D}.
 
+\iffalse % temporarily hide data model section
 \section[Observation Core Components Data Model]{Observation Core Components Data Model}
 \label{sec:core-components}This section highlights and describes the core components of the Observation data model,
 synthetized today in the Dataset Metadata DM specification. The term ``core components'' is meant to refer to those
@@ -583,8 +584,18 @@ useful with the data.  The user needs to know exactly what the data product is b
 analysis.
 
 See section \ref{bkm:Ref289893457} for more details and implementation requirements.
+\fi % temporarily hide data model section
+
+\section{ObsCore Table Model}
+
+ObsCore defines a simple set of core attributes to be included in a single table. This table structure can be
+implemented in various services.
+
+TODO: move core specification content from next section here
 
 \section{Implementation of ObsCore in a TAP Service}
+TODO: TAP-specific details here
+
 \label{sec:obstap-impl}The ObsCore model must be implemented within Table Access Protocol (TAP) services such that all
 valid queries can be executed unchanged on any service that implements the model.  Additional optional or
 provider-defined columns are permitted (see section \ref{bkm:Ref421295535}) so long as all mandatory columns are
@@ -983,7 +994,19 @@ optional fields, we recommend where possible to use the items defined in the ful
 as optional. ObsTAP compliant services will support all columns defined as mandatory and possibly some of the optional
 ones. Queries built up using additional columns defined specifically for a given archive might not be portable.
 
-\section{Registering an ObsTAP Service}
+\section{ObsCore Extensions}
+The ObsCore table includes common metadata attributes that are applicable to a wide range of astronomical data.
+Additional details that are not common enough to be included in core may be defined as extensions that support
+data discovery use cases for specific kinds of data.
+
+TODO: extension mechanism
+
+\section{Registering ObsCore and Extension Tables}
+TODO: write this section following current practice and remove the next section.
+
+\section{OBSOLETE: Registering an ObsTAP Service}
+TODO: remove when previous section makes it obsolete
+
 \label{sec:obstap-register}The standard identifier for this version of the ObsCore model now follows the IVOA Identifiers
 v2.0 specification \citep{2016ivoa.spec.0523D} and should be ivo://ivoa.net/std/ObsCore\#core-1.1
 
