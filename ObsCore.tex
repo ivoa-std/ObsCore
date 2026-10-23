@@ -584,7 +584,53 @@ See section \ref{bkm:Ref289893457} for more details and implementation requireme
 \section{ObsCore Table Model}
 
 ObsCore defines a simple set of core attributes to be included in a single table. This table structure can be
-implemented in various services.
+implemented in various services. The column name and data types are defined using the VOTable FIELD attributes
+\verb|name| and \verb|datatype,arraysize,xtype| respectively.
+
+%\begin{table}[h]
+%\begin{center}
+\begin{tabularx}{\textwidth}{|p{0.25\textwidth}|p{0.10\textwidth}|p{0.10\textwidth}|p{0.14\textwidth}|p{0.08\textwidth}|p{0.12\textwidth}|}
+\hline
+name & datatype & arraysize & xtype & units & constraint\\\hline
+dataproduct\_type & char & * & & & \\\hline
+calib\_level & int & & & & not null\\\hline
+obs\_collection & char & * & & & not null\\\hline
+obs\_id & char & * & & & not null\\\hline
+obs\_publisher\_did & char & * & uri & & not null\\\hline
+access\_url & char & * & uri & & \\\hline
+access\_format & char & * & & & \\\hline
+access\_estsize & long & & & KiB & \\\hline
+target\_name & char & * & & & \\\hline
+s\_ra & double & & & deg & \\\hline
+s\_dec & double & & & deg  & \\\hline
+s\_fov & double & & & deg  & \\\hline
+s\_region & char & * & multishape & deg & \\\hline
+s\_resolution & double & & & arcsec  & \\\hline
+s\_xel1 & double & & & & \\\hline
+s\_xel2 & double & & & & \\\hline
+t\_min & double & & & d & \\\hline
+t\_max & double & & & d & \\\hline
+t\_exptime & double & & & s & \\\hline
+t\_resolution & double & & & s & \\\hline
+t\_xel & long & & & & \\\hline
+em\_min & double & & & m & \\\hline
+em\_max & double & & & m & \\\hline
+em\_res\_power & double & & & & \\\hline
+em\_xel & long & & & & \\\hline
+o\_ucd & char & * & & & \\\hline
+pol\_states  & char & * & & & \\\hline
+pol\_xel & long & & & & \\\hline
+facility\_name & char & * & & & \\\hline
+instrument\_name & char & * & & & \\\hline
+\caption{ObsCore: metadata for required fields}
+\label{tab:OCR}
+\end{tabularx}
+%\end{center}
+%\end{table}
+%\vspace{0.3cm}
+
+In Table \ref{tab:OCR}, the constraint column specifies the columns that must contain a value; other columns are allowed
+to be null. The data types above make use of \verb|xtype| values defined in DALI-1.2 (REF).
 
 \subsection{Data Product Type (dataproduct\_type)}
 The dataproduct\_type column contains a simple string value describing the primary nature of the data product.  It
@@ -901,88 +947,47 @@ The ObsCore table includes common metadata attributes that are applicable to a w
 Additional details that are not common enough to be included in core may be defined as extensions that support
 data discovery use cases for specific kinds of data.
 
-TODO: extension mechanism
+An extension is expected to be a single additional table definition that is joined to the ObsCore table via a key.
+The obs\_publisher\_did is the natural key to use because it is unique, therefore an extension table must contain a
+a column with the same name and values that match the associated record in the ObsCore table.
+
+The obs\_publisher\_did values must be unique in the extension table, so there is always a \verb|1:[0..1]| relation
+between ObsCore and an extension. In a database context, this column in the extension is a foreign key referencing
+the primary key in the ObsCore table.
+
+Extension tables will include one or more addtional columns that are specific to the extension. These columns should
+be named in a style that is consistent with ObsCore and must not duplicate any columns in the ObsCore table.
 
 \section{Implementation of ObsCore in a TAP Service}
-TODO: TAP-specific details here
-
-\label{sec:obstap-impl}The ObsCore model must be implemented within Table Access Protocol (TAP) services such that all
+\label{sec:obstap-impl}
+The ObsCore model is designed to be implemented within Table Access Protocol (TAP) services such that all
 valid queries can be executed unchanged on any service that implements the model.  Additional optional or
 provider-defined columns are permitted (see section \ref{bkm:Ref421295535}) so long as all mandatory columns are
-provided.  The protocol does not specify any specific ordering of fields in the query response so long as the mandatory
-parameters are present in the output stream.
+provided.
 
-Here we specify an explicit mapping of the model to relational database tables; in the context of TAP this means we are
-specifying the logical tables as described in the TAP\_SCHEMA (the TAP-required database schema where the tables and
-columns exposed by the service are described).  This does not necessarily imply that the underlying database will have
-the identical structure (what is exposed through TAP could be, for example, a database view of the underlying database
-tables), but in most cases the relationship between TAP\_SCHEMA description and the underlying tables is
-straightforward.
+The VOTable metadata for ObsCore columns is specified above (REF) and in the context of TAP this also specifies
+most of the content of the TAP\_SCHEMA.columns description. Since version 1.0, the table name in TAP\_SCHEMA.tables
+and TAP\_SCHEMA.columns is a fxed value: \verb|ivoa.ObsCore|.
 
 %\begin{table}[h]
 %\begin{center}
-\begin{tabularx}{\textwidth}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.4\textwidth}|}
+\begin{tabularx}{\textwidth}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|}
 \hline
-schema\_name & table\_name & Description\\\hline
-ivoa & ivoa.ObsCore & ObsCore 1.1\\\hline
-\caption{TAP\_SCHEMA.tables for implementation of the ObsCore model.}
+schema\_name & table\_name & description & utype\\\hline
+ivoa & ivoa.ObsCore & ObsCore 1.2 & TBD \\\hline
+\caption{TAP\_SCHEMA.tables metadata}
 \label{tab:3}
 \end{tabularx}
 %\end{center}
 %\end{table}
 
-%\begin{table}[h]
-%\begin{center}
-\begin{tabularx}{\textwidth}{|p{0.18\textwidth}|p{0.25\textwidth}|p{0.22\textwidth}|p{0.07\textwidth}|p{0.14\textwidth}|}
-\hline
-table\_name & column\_name & data type & units & Constraint\\\hline
-ivoa.ObsCore & dataproduct\_type & adql:VARCHAR &  & \\\hline
-ivoa.ObsCore & calib\_level & adql:INTEGER & & not null\\\hline
-ivoa.ObsCore & obs\_collection & adql:VARCHAR & & not null\\\hline
-ivoa.ObsCore & obs\_id & adql:VARCHAR & & not null\\\hline
-ivoa.ObsCore & obs\_publisher\_did & adql:VARCHAR & & not null\\\hline
-ivoa.ObsCore & access\_url & adql:CLOB & & \\\hline
-ivoa.ObsCore & access\_format & adql:VARCHAR & & \\\hline
-ivoa.ObsCore & access\_estsize & adql:BIGINT & kbyte & \\\hline
-ivoa.ObsCore & target\_name & adql:VARCHAR & & \\\hline
-ivoa.ObsCore & s\_ra & adql:DOUBLE & deg & \\\hline
-ivoa.ObsCore & s\_dec & adql:DOUBLE & deg  & \\\hline
-ivoa.ObsCore & s\_fov & adql:DOUBLE & deg  & \\\hline
-ivoa.ObsCore & s\_region & adql:REGION &  & \\\hline
-ivoa.ObsCore & s\_resolution & adql:DOUBLE & arcsec  & \\\hline
-ivoa.ObsCore & s\_xel1 & adql:BIGINT &  & \\\hline
-ivoa.ObsCore & s\_xel2 & adql:BIGINT &  & \\\hline
-ivoa.ObsCore & t\_min & adql:DOUBLE & d  & \\\hline
-ivoa.ObsCore & t\_max & adql:DOUBLE & d  & \\\hline
-ivoa.ObsCore & t\_exptime & adql:DOUBLE & s  & \\\hline
-ivoa.ObsCore & t\_resolution & adql:DOUBLE & s  & \\\hline
-ivoa.ObsCore & t\_xel & adql:BIGINT &  & \\\hline
-ivoa.ObsCore & em\_min & adql:DOUBLE & m & \\\hline
-ivoa.ObsCore & em\_max & adql:DOUBLE & m & \\\hline
-ivoa.ObsCore & em\_res\_power & adql:DOUBLE & & \\\hline
-ivoa.ObsCore & em\_xel & adql:BIGINT & & \\\hline
-ivoa.ObsCore & o\_ucd & adql:VARCHAR & & \\\hline
-ivoa.ObsCore & pol\_states  & adql:VARCHAR & & \\\hline
-ivoa.ObsCore & pol\_xel & adql:BIGINT & & \\\hline
-ivoa.ObsCore & facility\_name & adql:VARCHAR & & \\\hline
-ivoa.ObsCore & instrument\_name & adql:VARCHAR & & \\\hline
-\caption{List of the minimal set of data model fields to
-implement for an ObsTAP service. See tables of Appendix C for the full description of the TAP\_SCHEMA.columns table.}
-\label{tab:4}
-\end{tabularx}
-%\end{center}
-%\end{table}
-%\vspace{0.3cm}
+The metadata for fields in VOTable columns in the TAP\_SCHEMA.columns table and the table description output
+by the VOSI-tables endpoint of a TAP service are the same. Other than the table\_name specified here the required
+column metadata is provided by table \ref{tab:OCR} above. Table \ref{tab:3} and Table \ref{tab:OCR} provide the
+primary information needed to describe the ObsCore model in terms of TAP\_SCHEMA tables and columns.
 
-Table \ref{tab:3} and Table \ref{tab:4} provide the primary information needed to describe the ObsCore model in terms of TAP\_SCHEMA tables
-and columns.
-
-The ``datatype'' column values should follow the TAP standard specification and are bound to the TAP specification
-version used to implement the model. Here what is shown applies for TAP v1.0.
-
-The content of the ``constraint'' column specified in Table \ref{tab:4} above is not part of the TAP\_SCHEMA.columns description,
-but is required by the ObsCore model and specified here to make this clear to implementers.  Additional standard
-content for the individual columns is specified below.
+The content of the ``constraint'' column specified in Table \ref{tab:OCR} above is not part of the 
+TAP\_SCHEMA.columns description, but is required by the ObsCore model and specified to make this clear to implementers.
 
 \subsection{Additional Columns}
 \label{bkm:Ref421295535}\label{bkm:Ref421297012}Service providers may include additional columns in the ivoa.ObsCore
@@ -1039,6 +1044,16 @@ other data models, or no Utypes at all are allowed}.
 
 
 \section{Changes from Previous Versions}
+\subsection{ObsCore-1.2}
+\begin{itemize}
+\item removed large section on data model(s) and UML that inspired the ObsCore table structure
+\item separate the core table structure from TAP-specific details
+\item refactor column data types using VOTable and DALI xtypes
+\item define extension mechanism for use by domain-specific metadata extensions
+\end{itemize}
+
+\subsection{ObsCore-1.1 and earlier}
+
 Errata on REC 2017 May 09:
 
 Removed FWHM from Time resolution definition in Table 1. 2018/05/12
