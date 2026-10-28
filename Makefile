@@ -8,7 +8,7 @@ DOCNAME = ObsCore
 DOCVERSION = 1.2
 
 # Publication date, ISO format; update manually for "releases"
-DOCDATE = 2026-09-18
+DOCDATE = 2026-10-26
 
 # What is it you're writing: NOTE, WD, PR, REC, PEN, or EN
 DOCTYPE = WD
